@@ -5,6 +5,8 @@ import { organizationStore, OrganizationStore } from "modules/organization/store
 import { PopoverStore, popoverStore } from "modules/popover/stores/popoverStore";
 import { ScheduleStore, scheduleStore } from "modules/schedule/stores/scheduleStore";
 import { VideoStore, videoStore } from "modules/video/stores/videoStore";
+import { VideoUploadStore, videoUploadStore } from "modules/video/stores/videoUploadStore";
+import { CookieStore, cookieStore } from "./stores/cookieStore";
 import { listStore, ListStore } from "./stores/listStore";
 import { StoreFactories } from "./types";
 
@@ -13,9 +15,11 @@ export type Stores = {
   listStore: ListStore;
   videoStore: VideoStore;
   modalStore: ModalStore;
+  cookieStore: CookieStore;
   networkStore: NetworkStore;
   popoverStore: PopoverStore;
   scheduleStore: ScheduleStore;
+  videoUploadStore: VideoUploadStore;
   organizationStore: OrganizationStore;
 };
 
@@ -24,8 +28,10 @@ export const stores: StoreFactories = {
   listStore,
   videoStore,
   modalStore,
+  cookieStore,
   popoverStore,
   networkStore,
   scheduleStore,
+  videoUploadStore,
   organizationStore,
 };

@@ -1,5 +1,7 @@
-import { startOfDay } from "date-fns";
-import { computed, observable } from "mobx";
+import { format, startOfDay } from "date-fns";
+import { computed, makeObservable, observable } from "mobx";
+import { ARTIFICIAL_DELAY } from "modules/core/constants";
+import { wait } from "modules/lang/async";
 import { ApiCollection } from "modules/network/types";
 import { ResourceFetcher } from "modules/state/classes/ResourceFetcher";
 import { ResourceStore, SerializedResourceStore } from "modules/state/classes/ResourceStore";
@@ -13,23 +15,32 @@ export type SerializedScheduleStore = {
 };
 
 export class ScheduleStore extends Store<SerializedScheduleStore> {
+  public make() {
+    makeObservable(this, {
+      selectedDate: observable,
+      itemsByDate: observable,
+      latestItems: observable,
+      selectedDateItems: computed,
+      upcoming: computed,
+    });
+  }
+
   private store = new ResourceStore({
     manager: this.manager,
     getId: (d: ScheduleItemData) => d.id,
     createFetcher: (manager, fetch) => new ResourceFetcher({ createResource: createScheduleItem, fetch, manager }),
-    createCanonicalFetchData: (d) => async () => {
+    createCanonicalFetchData: (id) => async () => {
       const { networkStore } = this.manager.stores;
       const { api } = networkStore;
 
-      const { data } = await api.get<ScheduleItemData>(`/scheduleitems/${d.id}`);
+      const { data } = await api.get<ScheduleItemData>(`/scheduleitems/${id}`);
       return data;
     },
   });
 
-  @observable public selectedDate = startOfDay(new Date());
-
-  @observable public itemsByDate: Record<string, number[]> = {};
-  @observable public latestItems: number[] = [];
+  public selectedDate = startOfDay(new Date());
+  public itemsByDate: Record<string, number[]> = {};
+  public latestItems: number[] = [];
 
   public async fetchLatest() {
     const { networkStore } = this.manager.stores;
@@ -55,12 +66,15 @@ export class ScheduleStore extends Store<SerializedScheduleStore> {
 
     this.itemsByDate[date.toISOString()] = [];
 
-    const response = await api.get<ApiCollection<ScheduleItemData>>("/scheduleitems", {
-      params: {
-        days: 1,
-        date: date.toISOString(),
-      },
-    });
+    const [response] = await Promise.all([
+      await api.get<ApiCollection<ScheduleItemData>>("/scheduleitems", {
+        params: {
+          days: 1,
+          date: format(date, "yyyy-M-d"),
+        },
+      }),
+      wait(ARTIFICIAL_DELAY),
+    ]);
 
     this.itemsByDate[date.toISOString()] = response.data.results.map((i) => this.store.add(i));
   }
@@ -79,12 +93,10 @@ export class ScheduleStore extends Store<SerializedScheduleStore> {
     this.store.hydrate(data.store);
   }
 
-  @computed
   public get selectedDateItems() {
     return (this.itemsByDate[this.selectedDate.toISOString()] ?? []).map((id) => this.store.getResourceById(id));
   }
 
-  @computed
   public get upcoming() {
     return this.latestItems
       .map((id) => this.store.getResourceById(id))

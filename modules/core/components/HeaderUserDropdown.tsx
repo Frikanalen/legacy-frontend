@@ -1,5 +1,6 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+import { observer } from "mobx-react-lite";
 import { usePopover } from "modules/popover/hooks/usePopover";
 import { SVGIcon, SVGIconWithProps } from "modules/ui/components/SVGIcon";
 import { User } from "modules/user/schemas";
@@ -22,6 +23,16 @@ const Container = styled.div`
 const Name = styled.span`
   font-size: 1.2em;
   font-weight: 600;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  max-width: 300px;
+
+  @media (max-width: 730px) {
+    max-width: 170px;
+  }
 `;
 
 const Icon = styled(SVGIcon as SVGIconWithProps<{ flipped: boolean }>)`
@@ -43,8 +54,10 @@ export type HeaderUserDropdownProps = {
   user: User;
 };
 
-export function HeaderUserDropdown(props: HeaderUserDropdownProps) {
+export const HeaderUserDropdown = observer((props: HeaderUserDropdownProps) => {
   const { user } = props;
+  const { firstName, email } = user;
+
   const ref = useRef<HTMLDivElement>(null);
 
   const { toggle, active } = usePopover({
@@ -55,8 +68,8 @@ export function HeaderUserDropdown(props: HeaderUserDropdownProps) {
 
   return (
     <Container onClick={toggle} ref={ref}>
-      <Name>Hei, {user.firstName}!</Name>
+      <Name>Hei, {firstName || email}!</Name>
       <Icon flipped={active} name="chevronDown" />
     </Container>
   );
-}
+});

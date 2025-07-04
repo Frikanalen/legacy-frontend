@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
-import { useObserver } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
+import { Meta } from "modules/core/components/Meta";
 import { useManager } from "modules/state/manager";
 import { GenericButton } from "modules/ui/components/GenericButton";
 import { SVGIcon } from "modules/ui/components/SVGIcon";
+import { NextPageContext } from "next";
 import { useEffect } from "react";
 import { spawnLoginModal } from "../helpers/spawnLoginModal";
 
@@ -33,12 +35,12 @@ const Icon = styled(SVGIcon)`
   margin-bottom: 32px;
 `;
 
-export function RequireAuthentication(props: { children: JSX.Element }) {
+export const RequireAuthentication = observer((props: { children: JSX.Element }) => {
   const { children } = props;
   const manager = useManager();
 
   const { authStore } = manager.stores;
-  const isAuthenticated = useObserver(() => authStore.isAuthenticated);
+  const { isAuthenticated } = authStore;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -50,10 +52,28 @@ export function RequireAuthentication(props: { children: JSX.Element }) {
 
   return (
     <Container>
+      <Meta
+        meta={{
+          title: "Logg inn",
+          description: "Denne siden krever innlogging",
+        }}
+      />
       <Icon name="lock" />
       <Title>Hvem der?</Title>
       <Subtitle>Du må være logget inn for å kunne bruke denne siden.</Subtitle>
-      <GenericButton onClick={() => spawnLoginModal(manager)} label="Logg inn" />
+      <GenericButton variant="primary" onClick={() => spawnLoginModal(manager)} label="Logg inn" />
     </Container>
   );
-}
+});
+
+export const getInitialRequireAuthenticationProps = async (context: NextPageContext) => {
+  const { res, manager } = context;
+  const { authStore } = manager.stores;
+
+  if (authStore.isAuthenticated || !res) {
+    return {};
+  }
+
+  res.statusCode = 401;
+  return { statusCode: 401 };
+};

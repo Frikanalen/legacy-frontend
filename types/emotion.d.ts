@@ -3,6 +3,7 @@ import "@emotion/react";
 declare module "@emotion/react" {
   export interface Theme {
     color: {
+      background: string;
       card: string;
       accent: string;
       secondAccent: string;
@@ -17,6 +18,7 @@ declare module "@emotion/react" {
       tip: string;
     };
     fontColor: {
+      overlay: string;
       normal: string;
       muted: string;
       subdued: string;

@@ -4,20 +4,18 @@ import { ComponentPropsWithoutRef } from "react";
 
 const Container = styled.button<{ stretch?: boolean }>`
   display: inline-block;
-  pointer-events: none;
 
   ${(props) =>
     props.stretch &&
     `
     width: 100%;
-  `}
+    `}
 `;
 
 const Inner = styled.span`
   display: flex;
   width: 100%;
 
-  pointer-events: all;
   user-select: none;
 `;
 
@@ -26,13 +24,17 @@ export type ButtonProps = ComponentPropsWithoutRef<"button"> & {
 };
 
 function _Button(props: ButtonProps, ref: React.Ref<HTMLButtonElement>) {
-  const { stretch, className, children, ...rest } = props;
+  const { stretch, className, children, type = "button", ...rest } = props;
 
   return (
-    <Container ref={ref} stretch={stretch} {...rest}>
+    <Container ref={ref} stretch={stretch} type={type} {...rest}>
       <Inner className={className}>{children}</Inner>
     </Container>
   );
 }
 
 export const Button = React.forwardRef(_Button);
+
+export type ButtonWithProps<T extends object> = (
+  props: ButtonProps & { ref?: React.Ref<HTMLButtonElement> } & T
+) => JSX.Element;

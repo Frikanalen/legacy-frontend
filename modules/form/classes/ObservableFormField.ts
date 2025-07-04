@@ -1,4 +1,4 @@
-import { observable, computed } from "mobx";
+import { observable, computed, makeObservable } from "mobx";
 import { Manager } from "modules/state/types";
 import { ValidatorList } from "./ValidatorList";
 
@@ -27,9 +27,9 @@ export class ObservableFormField<V, SV = V> implements ObservableFormFieldLike<V
   protected manager!: Manager;
   protected validators: ValidatorList<V>;
 
-  @observable public touched = false;
-  @observable public dirty = false;
-  @observable public value: V;
+  public touched = false;
+  public dirty = false;
+  public value: V;
 
   private defaultValue: V;
 
@@ -37,9 +37,16 @@ export class ObservableFormField<V, SV = V> implements ObservableFormFieldLike<V
     this.value = options.value;
     this.defaultValue = options.value;
     this.validators = new ValidatorList(this.value);
+
+    makeObservable(this, {
+      touched: observable,
+      dirty: observable,
+      value: observable,
+      serializedValue: computed,
+      error: computed,
+    });
   }
 
-  @computed
   public get serializedValue(): SV {
     return this.value as any;
   }
@@ -60,6 +67,10 @@ export class ObservableFormField<V, SV = V> implements ObservableFormFieldLike<V
     this.validators.validate(this.value);
   };
 
+  public makeDirty = () => {
+    this.dirty = true;
+  };
+
   public reset = () => {
     this.value = this.defaultValue;
     this.touched = false;
@@ -73,7 +84,6 @@ export class ObservableFormField<V, SV = V> implements ObservableFormFieldLike<V
 
   public destroy() {}
 
-  @computed
   public get error() {
     return this.validators.error;
   }
