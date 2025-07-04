@@ -1,8 +1,6 @@
 # Frikanalen web frontend
 
-![Build frontend package](https://github.com/Frikanalen/frikanalen/workflows/Build%20frontend%20package/badge.svg)
-
-This is the new frontend, under active development.
+This is an attempt to make a snapshot of the repo in 2021 in order to build a frontend package.
 
 It can be reached at frikanalen.no.
 
