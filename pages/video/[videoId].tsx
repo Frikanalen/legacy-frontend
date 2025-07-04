@@ -8,11 +8,17 @@ import Link from "next/link";
 import React from "react";
 import { useResourceList } from "modules/state/hooks/useResourceList";
 import { useStores } from "modules/state/manager";
-import { ListTail } from "modules/state/components/ListTail";
 import { RecentVideoItem } from "../../modules/video/components/RecentVideoItem";
+import { Meta } from "modules/core/components/Meta";
+
+const breakpoint = 900;
 
 const Container = styled.div`
   display: flex;
+
+  @media (max-width: ${breakpoint}px) {
+    flex-direction: column;
+  }
 `;
 
 const Content = styled.div`
@@ -48,6 +54,13 @@ const UploadedDate = styled.span`
 const Sidebar = styled.div`
   width: 380px;
   margin-left: 32px;
+
+  @media (max-width: ${breakpoint}px) {
+    width: 100%;
+
+    margin-left: 0px;
+    margin-top: 32px;
+  }
 `;
 
 const SidebarTitle = styled.h5`
@@ -70,6 +83,13 @@ function VideoView(props: ContentProps) {
 
   return (
     <Container>
+      <Meta
+        meta={{
+          title: name,
+          description: header,
+          author: organization.name,
+        }}
+      />
       <Content>
         <VideoPlayer width={1280} height={720} src={ogvUrl} thumbnail={files.largeThumb} />
         <PrimaryInfo>
@@ -88,7 +108,6 @@ function VideoView(props: ContentProps) {
         {videos.map((x) => (
           <RecentVideoItem key={x.data.id} video={x} />
         ))}
-        <ListTail list={video.latestVideosByOrganization} />
       </Sidebar>
     </Container>
   );
@@ -103,7 +122,12 @@ const VideoPage = createResourcePageWrapper<Video>({
     return videoStore.fetchById(safeVideoId);
   },
   renderContent: (v) => <VideoView video={v} />,
-  onResource: async (v) => {
+  getInitialProps: async (v, context) => {
+    const { videoStore } = context.manager.stores;
+
+    // Temporary fix for partial data
+    await videoStore.fetchById(v.data.id).fetch();
+
     await v.latestVideosByOrganization.more();
   },
 });

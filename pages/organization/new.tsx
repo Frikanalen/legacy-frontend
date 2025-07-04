@@ -1,8 +1,13 @@
 import styled from "@emotion/styled";
-import { useObserver } from "mobx-react-lite";
-import { RequireAuthentication } from "modules/auth/components/RequireAuthentication";
+import { observer } from "mobx-react-lite";
+import {
+  getInitialRequireAuthenticationProps,
+  RequireAuthentication,
+} from "modules/auth/components/RequireAuthentication";
+import { Meta } from "modules/core/components/Meta";
 import { Form } from "modules/form/components/Form";
 import { FormField, FormFieldWithProps } from "modules/form/components/FormField";
+import { useFormSubmission } from "modules/form/hooks/useFormSubmission";
 import { ControlledTextInput } from "modules/input/components/ControlledTextInput";
 import { toTitleCase } from "modules/lang/string";
 import { createNewOrganizationForm } from "modules/organization/forms/createNewOrganizationForm";
@@ -13,12 +18,19 @@ import { useManager } from "modules/state/manager";
 import { ExternalLink } from "modules/ui/components/ExternalLink";
 import { GenericButton } from "modules/ui/components/GenericButton";
 import { Notice } from "modules/ui/components/Notice";
-import { StatusLine, StatusType } from "modules/ui/components/StatusLine";
+import { StatusLine } from "modules/ui/components/StatusLine";
+import { useStatusLine } from "modules/ui/hooks/useStatusLine";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
+const breakpoint = 900;
+
 const Container = styled.div`
   display: flex;
+
+  @media (max-width: ${breakpoint}px) {
+    flex-direction: column;
+  }
 `;
 
 const FormContainer = styled.div`
@@ -30,6 +42,10 @@ const FormContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "number name" "homepage homepage" "postal street" "footer footer";
   gap: 24px;
+
+  @media (max-width: ${breakpoint}px) {
+    grid-template-areas: "number number" "name name" "homepage homepage" "postal street" "footer footer";
+  }
 `;
 
 const FormFooter = styled.div`
@@ -43,13 +59,22 @@ const FormFooter = styled.div`
 const Info = styled.div`
   width: 700px;
   margin-left: 32px;
+
+  @media (max-width: ${breakpoint}px) {
+    width: 100%;
+
+    margin-left: 0px;
+    margin-bottom: 32px;
+
+    order: -1;
+  }
 `;
 
 const Field = styled(FormField as FormFieldWithProps<{ area: string }>)`
   grid-area: ${(props) => props.area};
 `;
 
-function Content() {
+const Content = observer(() => {
   const router = useRouter();
   const manager = useManager();
 
@@ -58,19 +83,18 @@ function Content() {
 
   const [form] = useState(() => createNewOrganizationForm(manager));
 
-  const [status, setStatus] = useState<[StatusType, string]>(["info", ""]);
-  const [type, message] = status;
+  const [status, setStatus] = useStatusLine();
 
-  const organizationNumber = useObserver(() => form.fields.orgnr.value);
+  const organizationNumber = form.fields.orgnr.value;
 
   useEffect(() => {
     const doFetch = async () => {
-      setStatus(["info", "Henter data fra registeret..."]);
+      setStatus("loading", "Henter data fra registeret...");
 
       const data = await fetchBrregData(organizationNumber);
 
       if (!data) {
-        setStatus(["error", "Kunne ikke hente data fra register, er organisasjonsnummer riktig?"]);
+        setStatus("error", "Kunne ikke hente data fra register, er organisasjonsnummer riktig?");
         return;
       }
 
@@ -81,35 +105,34 @@ function Content() {
       postalAddress.setValue(`${safeName}\n${formatAddress(data.postadresse)}`);
       streetAddress.setValue(`${safeName}\n${formatAddress(data.forretningsadresse)}`);
       homepage.setValue(data.hjemmeside);
-
-      setStatus(["info", ""]);
     };
 
     if (organizationNumber.length === 9 && Number.isInteger(Number(organizationNumber))) {
       doFetch();
     }
-  }, [organizationNumber, form]);
+  }, [organizationNumber, form, setStatus]);
 
-  // TODO: Make this way of submitting forms more DRY
-  const handleSubmit = async () => {
-    const valid = await form.ensureValidity();
+  const [formStatus, handleSubmit] = useFormSubmission(form, async (serialized) => {
+    const { data } = await api.post<OrganizationData>("/organization/", serialized);
 
-    if (valid) {
-      setStatus(["info", "Vent litt..."]);
+    organizationStore.add(data);
+    router.push(`/organization/${data.id}/admin`);
+  });
 
-      try {
-        const { data } = await api.post<OrganizationData>("/organization/", form.serialized);
-
-        organizationStore.add(data);
-        router.push(`/organization/${data.id}/admin`);
-      } catch (e) {
-        setStatus(["error", "Noe gikk galt, prøv igjen senere"]);
-      }
-    }
-  };
+  // Pass automatic form status along to manual one
+  useEffect(() => {
+    const { type, message } = formStatus;
+    setStatus(type, message);
+  }, [formStatus, setStatus]);
 
   return (
     <Form onSubmit={handleSubmit} form={form}>
+      <Meta
+        meta={{
+          title: "Opprett medlemskap",
+          description: "",
+        }}
+      />
       <Container>
         <FormContainer>
           <Field area="number" label="Organisasjonsnummer" name="orgnr">
@@ -128,8 +151,8 @@ function Content() {
             <ControlledTextInput multiline name="streetAddress" />
           </Field>
           <FormFooter>
-            <StatusLine message={message} type={type} />
-            <GenericButton label="Opprett" />
+            <StatusLine {...status} />
+            <GenericButton variant="primary" onClick={handleSubmit} label="Opprett" />
           </FormFooter>
         </FormContainer>
         <Info>
@@ -157,7 +180,7 @@ function Content() {
       </Container>
     </Form>
   );
-}
+});
 
 export default function NewOrganization() {
   return (
@@ -166,3 +189,5 @@ export default function NewOrganization() {
     </RequireAuthentication>
   );
 }
+
+NewOrganization.getInitialProps = getInitialRequireAuthenticationProps;

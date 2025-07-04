@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Meta } from "modules/core/components/Meta";
 import { Organization } from "modules/organization/resources/Organization";
 import { ListTail } from "modules/state/components/ListTail";
 import { createResourcePageWrapper } from "modules/state/helpers/createResourcePageWrapper";
@@ -9,10 +10,16 @@ import { Section } from "modules/ui/components/Section";
 import { VideoGrid } from "modules/video/components/VideoGrid";
 import React from "react";
 
+const breakpoint = 1250;
+
 const Container = styled.div``;
 
 const Header = styled.div`
   display: flex;
+
+  @media (max-width: ${breakpoint}px) {
+    flex-direction: column;
+  }
 `;
 
 const PrimaryInfo = styled.div`
@@ -33,11 +40,20 @@ const SecondaryInfo = styled.div`
   word-break: break-word;
 
   display: flex;
+
+  @media (max-width: ${breakpoint}px) {
+    flex-direction: column;
+  }
 `;
 
 const InfoSection = styled(Section)`
   margin-left: 32px;
   min-width: 200px;
+
+  @media (max-width: ${breakpoint}px) {
+    margin-left: 0px;
+    margin-top: 32px;
+  }
 `;
 
 const InfoSectionLine = styled.span`
@@ -73,6 +89,12 @@ function OrganizationView(props: OrganizationViewProps) {
 
   return (
     <Container>
+      <Meta
+        meta={{
+          title: name,
+          description,
+        }}
+      />
       <Header>
         <PrimaryInfo>
           <Title>{name}</Title>
@@ -112,13 +134,13 @@ function OrganizationView(props: OrganizationViewProps) {
 const OrganizationPage = createResourcePageWrapper<Organization>({
   getFetcher: (query, manager) => {
     const { organizationStore } = manager.stores;
-    const { orgID } = query;
+    const { organizationId } = query;
 
-    const safeOrgId = Number(orgID) ?? 0;
+    const safeOrgId = Number(organizationId) ?? 0;
     return organizationStore.fetchById(safeOrgId);
   },
   renderContent: (o) => <OrganizationView organization={o} />,
-  onResource: async (o) => {
+  getInitialProps: async (o) => {
     await o.videos.more();
   },
 });
