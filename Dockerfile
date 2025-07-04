@@ -1,11 +1,10 @@
-FROM node:18-alpine AS deps
-RUN apk add --no-cache libc6-compat
+FROM node:18-bullseye AS deps
 WORKDIR /app
 
 COPY package.json yarn.lock ./
 RUN  yarn install
 
-FROM node:18-alpine AS builder
+FROM node:18-bullseye AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -15,7 +14,7 @@ ENV NEXT_PUBLIC_ENV production
 
 RUN yarn build
 
-FROM node:18-alpine AS runner
+FROM node:18-bullseye AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
