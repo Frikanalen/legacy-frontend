@@ -1,20 +1,30 @@
-FROM node:16-alpine AS builder
+FROM node:16-buster AS deps
 
-WORKDIR /usr/app
+WORKDIR /app
 
-COPY package.json .
+COPY package.json yarn.lock ./
 
-RUN yarn install --quiet
+RUN yarn install --frozen-lockfile --production=false
 
-FROM builder
+FROM node:16-buster AS builder
 
-ENV NODE_ENV production
-ENV NEXT_PUBLIC_ENV production
+WORKDIR /app
 
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 RUN yarn build
 
-USER node
+FROM node:16-buster
+
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_PUBLIC_ENV production
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
 
 CMD yarn run start
