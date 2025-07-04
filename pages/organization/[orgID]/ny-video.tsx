@@ -34,7 +34,8 @@ export default function VideoCreate({ org, possibleCategories }: VideoCreateProp
 
   if (!context.isLoggedIn) return <></>;
 
-  const { token } = context;
+  // FIXME
+  const token = "";
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
