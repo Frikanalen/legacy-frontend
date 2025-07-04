@@ -66,10 +66,7 @@
     "zod": "^3.7.1"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.3.6",
-    "@storybook/addon-essentials": "^6.3.6",
-    "@storybook/addon-links": "^6.3.6",
-    "@storybook/react": "^6.3.6",
+    "@babel/plugin-proposal-decorators": "^7.28.0",
     "@types/base-64": "^1.0.0",
     "@types/js-cookie": "^3.0.0",
     "@types/react": "^17.0.15",
