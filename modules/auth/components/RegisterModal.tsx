@@ -52,11 +52,11 @@ export function RegisterModal(props: RegisterModalProps) {
           <Info>
             Her kan du opprette en bruker for tilgang til innmeldingsskjema og andre medlemsfunksjoner på siden.
           </Info>
-          <Field label="Fornavn" name="firstName">
-            <ControlledTextInput placeholder="Ola" autoFocus name="firstName" />
+          <Field label="Fornavn" name="first_name">
+            <ControlledTextInput placeholder="Ola" autoFocus name="first_name" />
           </Field>
           <Field label="Etternavn" name="lastName">
-            <ControlledTextInput placeholder="Nordmann" name="lastName" />
+            <ControlledTextInput placeholder="Nordmann" name="last_name" />
           </Field>
           <Field label="E-post" name="email">
             <ControlledTextInput placeholder="epost@webside.no" name="email" />

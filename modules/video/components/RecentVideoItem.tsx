@@ -56,7 +56,7 @@ export type RecentVideoItemProps = {
 
 export function RecentVideoItem(props: RecentVideoItemProps) {
   const { video } = props;
-  const { id, files, createdTime, name } = video.data;
+  const { id, files, created_time, name } = video.data;
 
   return (
     <Container>
@@ -64,7 +64,7 @@ export function RecentVideoItem(props: RecentVideoItemProps) {
         <AspectContainer width={1280} height={720}>
           <Link href={`/video/${id}`} passHref>
             <a>
-              <Thumbnail src={files.largeThumb} />
+              <Thumbnail src={files.large_thumb} />
             </a>
           </Link>
         </AspectContainer>
@@ -75,7 +75,7 @@ export function RecentVideoItem(props: RecentVideoItemProps) {
             <a>{name}</a>
           </Link>
         </Title>
-        <UploadedDate>lastet opp {format(new Date(createdTime), "d. MMM yyyy", { locale: nb })}</UploadedDate>
+        <UploadedDate>lastet opp {format(new Date(created_time), "d. MMM yyyy", { locale: nb })}</UploadedDate>
       </Content>
     </Container>
   );
