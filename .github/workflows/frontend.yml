@@ -46,8 +46,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           build-args: |
-            NEXT_PUBLIC_DJANGO_URL="https://frikanalen.no/api/"
-            NEXT_PUBLIC_UPLOAD_URL="https://upload.frikanalen.no/files"
+            NEXT_PUBLIC_DJANGO_URL=https://frikanalen.no/api/
+            NEXT_PUBLIC_UPLOAD_URL=https://upload.frikanalen.no/files
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
