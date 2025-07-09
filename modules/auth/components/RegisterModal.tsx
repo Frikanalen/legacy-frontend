@@ -16,7 +16,7 @@ const Field = styled(FormField)`
 `;
 
 const Info = styled.p`
-  margin-top: 0px;
+  margin-top: 0;
 `;
 
 export type RegisterModalProps = {

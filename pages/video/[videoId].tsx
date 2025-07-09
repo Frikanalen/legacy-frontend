@@ -58,7 +58,7 @@ const Sidebar = styled.div`
   @media (max-width: ${breakpoint}px) {
     width: 100%;
 
-    margin-left: 0px;
+    margin-left: 0;
     margin-top: 32px;
   }
 `;
