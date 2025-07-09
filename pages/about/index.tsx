@@ -60,7 +60,7 @@ export default function About() {
       <p>Ta kontakt med teknisk leder om du ønsker å bidra til at Frikanalen kan bli noe virkelig stort!</p>
       <h2>Kontakt oss</h2>
       <p>
-        Leder Ola Tellesbø kan nås på <ExternalLink href="mailto:post@frikanalen.no">post@frikanalen.no</ExternalLink>
+        Styreleder Tom Fredrik Blenning kan nås på <ExternalLink href="mailto:post@frikanalen.no">post@frikanalen.no</ExternalLink>
       </p>
       <p>
         Teknisk leder Tore Sinding Bekkedal kan nås på{" "}
