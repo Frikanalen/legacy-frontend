@@ -5,10 +5,10 @@ export type VideoData = {
   name: string;
   header: string;
   organization: OrganizationData;
-  ogv_url: string;
-  created_time: string;
+  ogvUrl: string;
+  createdTime: string;
   files: {
-    large_thumb: string;
+    largeThumb: string;
   };
 };
 
@@ -20,6 +20,6 @@ export type VideoCategoryData = {
 };
 
 export type VideoUploadTokenData = {
-  upload_token: string;
-  upload_url: string;
+  uploadToken: string;
+  uploadUrl: string;
 };

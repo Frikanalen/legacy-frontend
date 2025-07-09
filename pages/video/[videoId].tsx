@@ -77,7 +77,7 @@ export type ContentProps = {
 function VideoView(props: ContentProps) {
   const { videoStore } = useStores();
   const { video } = props;
-  const { name, created_time, header, organization, ogv_url, files } = video.data;
+  const { name, createdTime, header, organization, ogvUrl, files } = video.data;
 
   const videos = useResourceList(video.latestVideosByOrganization, videoStore);
 
@@ -91,7 +91,7 @@ function VideoView(props: ContentProps) {
         }}
       />
       <Content>
-        <VideoPlayer width={1280} height={720} src={ogv_url} thumbnail={files.large_thumb} />
+        <VideoPlayer width={1280} height={720} src={ogvUrl} thumbnail={files.largeThumb} />
         <PrimaryInfo>
           <Title>{name}</Title>
           <Organization>
@@ -101,7 +101,7 @@ function VideoView(props: ContentProps) {
           </Organization>
         </PrimaryInfo>
         <Description>{header}</Description>
-        <UploadedDate>lastet opp {format(new Date(created_time), "d. MMM yyyy", { locale: nb })}</UploadedDate>
+        <UploadedDate>lastet opp {format(new Date(createdTime), "d. MMM yyyy", { locale: nb })}</UploadedDate>
       </Content>
       <Sidebar>
         <SidebarTitle>Nyeste videoer fra {video.organization.data.name}</SidebarTitle>
