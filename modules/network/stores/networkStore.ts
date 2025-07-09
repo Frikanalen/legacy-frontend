@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from "axios";
-import configs from "../config";
 import { IS_SERVER } from "modules/core/constants";
 import { createStoreFactory, Store } from "modules/state/classes/Store";
 import { NextPageContext } from "next";
 import cookie from "cookie";
 import { THE_END_OF_TIMES } from "../constants";
+import { env } from "../../core/env";
 
 export class NetworkStore extends Store {
   public incomingHeaders: Record<string, string> = {};
@@ -60,7 +60,7 @@ export class NetworkStore extends Store {
 
     this.apiInstance = this.addInterceptors(
       axios.create({
-        baseURL: configs.api,
+        baseURL: env.NEXT_PUBLIC_DJANGO_URL,
         withCredentials: true,
         headers, // FIXME: JUST TO GET BUILD RUNNING
       })
@@ -68,7 +68,7 @@ export class NetworkStore extends Store {
 
     this.uploadInstance = this.addInterceptors(
       axios.create({
-        baseURL: configs.upload,
+        baseURL: env.NEXT_PUBLIC_UPLOAD_URL,
         withCredentials: true,
         headers,
       })
