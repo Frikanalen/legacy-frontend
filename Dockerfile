@@ -9,8 +9,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NEXT_PUBLIC_ENV production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_ENV=production
 
 ARG NEXT_PUBLIC_DJANGO_URL
 ARG NEXT_PUBLIC_UPLOAD_URL
@@ -22,7 +22,7 @@ RUN yarn build
 FROM node:18-bullseye AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -35,6 +35,6 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 
 CMD ["npm", "start"]
