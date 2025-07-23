@@ -77,7 +77,7 @@ export default function About() {
       </p>
       <p>
         Sendetidsfordelingen skal gi mulighet for fast sendetid for medlemmer som ønsker det og sette av åpne flater for
-        enkeltprogrammer. Intet enkeltmedlem skal kunne tildeles mer enn én times fast sendetid pr dag. Sendetidspunkt
+        enkeltprogrammer. Et enkeltmedlem skal kunne tildeles minst én time fast sendetid per døgn. Sendetidspunkt
         som anses som spesielt gunstige skal rotere mellom aktørene.
       </p>
 
