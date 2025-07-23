@@ -135,6 +135,7 @@ export default function About() {
 
       <p>
         Styret består av leder, nestleder og fire styremedlemmer valgt av årsmøtet.
+        Ved stemmelikhet har styreleder dobbelstemme.
       </p>
 
       <h3>§ 5-1. Styrets oppgaver</h3>
