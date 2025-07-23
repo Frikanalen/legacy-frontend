@@ -168,7 +168,7 @@ export default function About() {
       <h2>§ 7. Oppløsning</h2>
 
       <p>
-        Forslag om oppløsning av Foreningen Frikanalen behandles på Årsmøte. Begrunnet forslag må være sendt styret i
+        Forslag om oppløsning av Foreningen Frikanalen behandles på Årsmøte. Begrunnet forslag må være tilsendt styret i
         Foreningen Frikanalen og alle tilsluttede medlemmer minst to måneder før Årsmøtet. Til oppløsning kreves 3⁄4
         stemmeflertall. Årsmøtet bestemmer hvordan eventuelle disponible midler og eiendeler skal fordeles.
       </p>
