@@ -14,7 +14,7 @@ export default function About() {
       <h1>Vedtekter for Foreningen Frikanalen</h1>
 
       <p>
-        (Vedtatt på stiftelsesmøtet 14. juni 2007. Revidert av Årsmøtet 4. februar 2008, 28.april 2011 og 28. mai 2015.)
+        (Vedtatt på stiftelsesmøtet 14. juni 2007. Revidert av Årsmøtet 4. februar 2008, 28.april 2011, 28. mai 2015 og 5. juni 2025.)
       </p>
 
       <h2>§ 1. Navn</h2>
