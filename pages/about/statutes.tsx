@@ -129,15 +129,12 @@ export default function About() {
           <li>Nestleder – velges særskilt, for 2 år</li>
           <li>3 styremedlemmer – velges for 2 år</li>
           <li>Eventuell revisor.</li>
-          <li>Valgkomite - bestående av 3 medlemmer, hvorav ett medlem kan være styremedlem i det sittende styret</li>
-          <li>Eventuell kontrollkomite bestående av 2 medlemmer.</li>
         </ol>
       </ol>
       <h2>§ 5. Styret</h2>
 
       <p>
-        Styret består av leder, nestleder og fire styremedlemmer valgt av årsmøtet. Alle over 15 år kan velges til
-        styreverv. Styret bør ha minst 1 medlem under 26 år og kjønnsbalanse.
+        Styret består av leder, nestleder og fire styremedlemmer valgt av årsmøtet.
       </p>
 
       <h3>§ 5-1. Styrets oppgaver</h3>
