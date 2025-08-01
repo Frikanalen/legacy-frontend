@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import axios, { AxiosRequestConfig, AxiosError } from "axios";
+import axios, { AxiosRequestConfig, AxiosError, AxiosProgressEvent } from "axios";
 import { TUS_CHUNK_SIZE, TUS_RESUMABLE, UPLOAD_RETRY_COUNT } from "../constants";
 import { Manager } from "modules/state/types";
 
@@ -138,7 +138,7 @@ export class FileUpload {
     this.status = "idle";
   }
 
-  private handleProgress = (event: ProgressEvent) => {
+  private handleProgress = (event: AxiosProgressEvent) => {
     const { loaded } = event;
     this.uploaded = this.offset + loaded;
   };
