@@ -77,7 +77,7 @@ export type ContentProps = {
 function VideoView(props: ContentProps) {
   const { videoStore } = useStores();
   const { video } = props;
-  const { name, createdTime, header, organization, ogvUrl, files } = video.data;
+  const { name, createdTime, header, organization, files } = video.data;
 
   const videos = useResourceList(video.latestVideosByOrganization, videoStore);
 
@@ -91,7 +91,7 @@ function VideoView(props: ContentProps) {
         }}
       />
       <Content>
-        <VideoPlayer width={1280} height={720} src={ogvUrl} thumbnail={files.largeThumb} />
+        <VideoPlayer width={1280} height={720} src={files.webmMed ?? files.theora ?? ""} thumbnail={files.largeThumb} />
         <PrimaryInfo>
           <Title>{name}</Title>
           <Organization>

@@ -5,10 +5,11 @@ export type VideoData = {
   name: string;
   header: string;
   organization: OrganizationData;
-  ogvUrl: string;
   createdTime: string;
   files: {
+    theora?: string;
     largeThumb: string;
+    webmMed?: string;
   };
 };
 
